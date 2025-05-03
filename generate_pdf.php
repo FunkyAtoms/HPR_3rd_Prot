@@ -1,4 +1,5 @@
 <?php
+ob_start(); // Start output buffering
 require_once 'libs/fpdf/fpdf.php'; // Include FPDF library
 include 'connector.php';
 
@@ -179,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['EmployeeID'])) {
         $pdf->Cell(0, 10, 'No school clinic records found.', 0, 1);
     }
 
-    // Output PDF
+    ob_end_clean(); // Clear the output buffer
     $pdf->Output('Employee_Health_Record.pdf', 'I');
 }
 ?>
