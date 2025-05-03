@@ -58,7 +58,7 @@ This is a simple Employee Management System built with PHP, MySQL, and FPDF for 
    - Select the `employeemanagement.sql` file from the project directory and click **Go**.
 
 3. **Database Tables:**
-   - The `database.sql` file will create the following tables:
+   - The `employeemanagement.sql` file will create the following tables:
      - `BasicInformation`
      - `WithComorbidities`
      - `Comorbidities`
