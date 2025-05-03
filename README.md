@@ -50,12 +50,12 @@ This is a simple Employee Management System built with PHP, MySQL, and FPDF for 
 
 1. **Create a New Database:**
    - In phpMyAdmin, click on the **Databases** tab.
-   - Create a new database named `employee_management`.
+   - Create a new database named `employeemanagement`.
 
 2. **Import the Database Schema:**
-   - Click on the `employee_management` database.
+   - Click on the `employeemanagement` database.
    - Go to the **Import** tab.
-   - Select the `database.sql` file from the project directory and click **Go**.
+   - Select the `employeemanagement.sql` file from the project directory and click **Go**.
 
 3. **Database Tables:**
    - The `database.sql` file will create the following tables:
@@ -135,7 +135,7 @@ HPR_3/
    - Change the port in the XAMPP Control Panel if necessary.
 
 2. **Database Import Errors:**
-   - Ensure the `database.sql` file is correctly formatted.
+   - Ensure the `employeemanagement.sql` file is correctly formatted.
    - Check for existing tables with the same name and drop them before importing.
 
 3. **FPDF Errors:**
