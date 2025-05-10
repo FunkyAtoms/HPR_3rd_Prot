@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['EmployeeID'])) {
     $emergencyContactRelationship = $_POST['EmergencyContactRelationship'];
     $emergencyContactNumber = $_POST['EmergencyContactNumber'];
 
-    // Update query
+    // Update Basic Information
     $sql = "UPDATE BasicInformation 
             SET LastName = ?, FirstName = ?, MiddleInitial = ?, Position = ?, Birthdate = ?, Age = ?, Gender = ?, CivilStatus = ?, Address = ?, Height = ?, Weight = ?, FoodAllergies = ?, ContactNumber = ?, EmergencyContactPerson = ?, EmergencyContactRelationship = ?, EmergencyContactNumber = ?
             WHERE EmployeeID = ?";
@@ -66,6 +66,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['EmployeeID'])) {
     );
 
     if ($stmt->execute()) {
+        // Append Comorbidities
+        if (isset($_POST['ComorbiditiesDetails'])) {
+            foreach ($_POST['ComorbiditiesDetails'] as $index => $details) {
+                $details = $conn->real_escape_string($details);
+                $medication = $conn->real_escape_string($_POST['MaintenanceMedication'][$index]);
+                $dosage = $conn->real_escape_string($_POST['MedicationAndDosage'][$index]);
+
+                $sqlComorbidity = "INSERT INTO Comorbidities (EmployeeID, ComorbiditiesDetails, MaintenanceMedication, MedicationAndDosage)
+                                   VALUES ('$employeeID', '$details', '$medication', '$dosage')";
+                $conn->query($sqlComorbidity);
+            }
+        }
+
+        // Append Operations
+        if (isset($_POST['Surgeries'])) {
+            foreach ($_POST['Surgeries'] as $surgery) {
+                $operationName = $conn->real_escape_string($surgery['name']);
+                $datePerformed = $conn->real_escape_string($surgery['date']);
+
+                $sqlOperation = "INSERT INTO Operations (EmployeeID, OperationName, DatePerformed) 
+                                 VALUES ('$employeeID', '$operationName', '$datePerformed')";
+                $conn->query($sqlOperation);
+            }
+        }
+
+        // Append School Clinic Records
+        if (isset($_POST['ClinicRecords'])) {
+            foreach ($_POST['ClinicRecords'] as $clinicRecord) {
+                $visitDate = $conn->real_escape_string($clinicRecord['visitDate']);
+                $complaints = $conn->real_escape_string($clinicRecord['complaints']);
+                $intervention = $conn->real_escape_string($clinicRecord['intervention']);
+                $nurseOnDuty = $conn->real_escape_string($clinicRecord['nurse']);
+
+                $sqlClinicRecord = "INSERT INTO SchoolClinicRecord (EmployeeID, VisitDate, Complaints, Intervention, NurseOnDuty) 
+                                    VALUES ('$employeeID', '$visitDate', '$complaints', '$intervention', '$nurseOnDuty')";
+                $conn->query($sqlClinicRecord);
+            }
+        }
+
+        // Redirect to the main menu with a success message
         header("Location: index.php?success=1");
         exit();
     } else {
@@ -73,13 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['EmployeeID'])) {
     }
 
     $stmt->close();
-
-    // Update Underwent Surgery
-    $underwentSurgery = $_POST['UnderwentSurgery']; // Assuming this field exists in the form
-    $sqlUpdateUnderwentSurgery = "UPDATE UnderwentSurgery 
-                                  SET HasUndergoneSurgery = '$underwentSurgery' 
-                                  WHERE EmployeeID = '$employeeID'";
-    $conn->query($sqlUpdateUnderwentSurgery);
 }
 
 $conn->close();
@@ -91,11 +124,11 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Employee</title>
+    <link rel="stylesheet" href="styles/global.css"> <!-- Use a global stylesheet for consistency -->
     <link rel="stylesheet" href="styles/update_employee.css">
 </head>
 <body>
-    <h1>Update Employee Information</h1>
-
+    <div class="container">
     <!-- Step 1: Ask for Employee ID -->
     <?php if (!isset($_GET['EmployeeID']) && !isset($_POST['EmployeeID'])): ?>
         <form method="GET" action="upd_emp.php">

@@ -12,10 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['EmployeeID'])) {
     $result = $stmt->get_result();
     $employeeData = $result->fetch_assoc();
 
-    // Add default values if fields are missing
-    $employeeData['WithComorbidities'] = $employeeData['WithComorbidities'] ?? 'No';
-    $employeeData['UnderwentSurgery'] = $employeeData['UnderwentSurgery'] ?? 'No';
-
     if (!$employeeData) {
         header("Location: update_employee.php?error=Employee not found.");
         exit();
@@ -99,11 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['EmployeeID'])) {
         exit();
     }
 
-    // Update comorbidities
-    $stmt = $conn->prepare("DELETE FROM Comorbidities WHERE EmployeeID = ?");
-    $stmt->bind_param("i", $employeeID);
-    $stmt->execute();
-
+    // Append Comorbidities
     if (isset($_POST['ComorbiditiesDetails'])) {
         foreach ($_POST['ComorbiditiesDetails'] as $index => $details) {
             $details = $conn->real_escape_string($details);
@@ -116,13 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['EmployeeID'])) {
         }
     }
 
-    
-
-    // Update surgeries
-    $stmt = $conn->prepare("DELETE FROM Operations WHERE EmployeeID = ?");
-    $stmt->bind_param("i", $employeeID);
-    $stmt->execute();
-
+    // Append Surgeries
     if (isset($_POST['OperationName'])) {
         foreach ($_POST['OperationName'] as $index => $name) {
             $name = $conn->real_escape_string($name);
@@ -134,11 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['EmployeeID'])) {
         }
     }
 
-    // Update school clinic records
-    $stmt = $conn->prepare("DELETE FROM SchoolClinicRecord WHERE EmployeeID = ?");
-    $stmt->bind_param("i", $employeeID);
-    $stmt->execute();
-
+    // Append School Clinic Records
     if (isset($_POST['VisitDate'])) {
         foreach ($_POST['VisitDate'] as $index => $visitDate) {
             $visitDate = $conn->real_escape_string($visitDate);

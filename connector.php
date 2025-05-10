@@ -2,7 +2,7 @@
 // Database connection parameters
 $servername = "localhost"; // Change this if your database is hosted elsewhere
 $username = "root"; // Default username for XAMPP
-$password = "minimco"; // Default password for XAMPP (leave empty for default installation)
+$password = ""; // Default password for XAMPP (leave empty for default installation)
 $dbname = "EmployeeManagement"; // The name of the database
 
 // Create the database connection
